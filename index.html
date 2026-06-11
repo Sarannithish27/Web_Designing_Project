@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Quantum Aptitude RPG</title>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&family=Rajdhani:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+  <!-- PARTICLE BACKGROUND -->
+  <canvas id="particleCanvas"></canvas>
+
+  <!-- START SCREEN -->
+  <section class="screen active" id="startScreen">
+    <div class="start-content">
+      <div class="logo-ring">
+        <div class="ring r1"></div>
+        <div class="ring r2"></div>
+        <div class="ring r3"></div>
+        <span class="logo-icon">⚙️</span>
+      </div>
+      <h1 class="title-glitch" data-text="QUANTUM APTITUDE RPG">QUANTUM APTITUDE RPG</h1>
+      <p class="tagline">LEARN IN A GAME WAY</p>
+      <button class="btn primary glow-btn" id="startBtn">⚡ Start Mission</button>
+      <button class="btn secondary" id="leaderboardBtn">🏆 Leaderboard</button>
+    </div>
+  </section>
+
+  <!-- LEADERBOARD SCREEN (NEW) -->
+  <section class="screen" id="leaderboardScreen">
+    <div class="card leaderboard-card">
+      <h2 class="section-title">🏆 Hall of Champions</h2>
+      <div class="leaderboard-filter">
+        <button class="filter-btn active" data-domain="all">All</button>
+        <button class="filter-btn" data-domain="aptitude">Aptitude</button>
+        <button class="filter-btn" data-domain="frontend">Frontend</button>
+        <button class="filter-btn" data-domain="backend">Backend</button>
+        <button class="filter-btn" data-domain="database">Database</button>
+      </div>
+      <div id="leaderboardList" class="leaderboard-list"></div>
+      <button class="btn secondary mt" id="backFromLeaderboard">← Back</button>
+    </div>
+  </section>
+
+  <!-- SETUP SCREEN -->
+  <section class="screen" id="setupScreen">
+    <div class="card setup-card">
+      <h2 class="section-title">⚙️ Create Your Operative</h2>
+
+      <!-- Player name input -->
+      <div class="input-group">
+        <label for="playerName">Operative Callsign</label>
+        <input type="text" id="playerName" placeholder="Enter codename (min 5 chars)" autocomplete="off"/>
+        <div id="playerStats" class="player-stats hidden">
+          <span id="statBestScore"></span>
+          <span id="statGamesPlayed"></span>
+        </div>
+      </div>
+
+      <!-- NEW: Domain Selection -->
+      <h3 class="sub-title">📡 Select Domain</h3>
+      <div class="domain-grid" id="domainGrid"></div>
+
+      <h3 class="sub-title">🎯 Select Difficulty</h3>
+      <div class="class-grid" id="difficultyGrid"></div>
+
+      <h3 class="sub-title">🧬 Select Class</h3>
+      <div class="class-grid" id="classGrid"></div>
+
+      <button class="btn primary glow-btn" id="beginQuizBtn">🚀 Begin Assessment</button>
+    </div>
+  </section>
+
+  <!-- LOADING SCREEN -->
+  <section class="screen" id="loadingScreen">
+    <div class="loading-content">
+      <div class="loader-ring"></div>
+      <h2>Initializing Quiz...</h2>
+      <p id="loadingMsg">Preparing your assessment...</p>
+    </div>
+  </section>
+
+  <!-- QUIZ SCREEN -->
+  <section class="screen" id="quizScreen">
+    <div class="quiz-wrapper">
+      <!-- Top bar with progress & stats -->
+      <div class="top-bar">
+        <span id="progressText" class="progress-label"></span>
+        <span id="domainLabel" class="domain-badge"></span>
+        <span id="scoreText" class="score-badge">Score: 0</span>
+      </div>
+
+      <!-- NEW: Numeric countdown timer -->
+      <div class="timer-block">
+        <div class="timer-number-wrap">
+          <span id="questionTimerNumber" class="timer-number">15</span>
+          <span class="timer-unit">sec</span>
+        </div>
+        <div class="timer-bar-track">
+          <div class="timer-fill" id="questionTimerFill"></div>
+        </div>
+      </div>
+
+      <!-- Question card -->
+      <div class="question-card">
+        <h3 id="questionText"></h3>
+        <div class="options" id="optionsContainer"></div>
+      </div>
+
+      <!-- RPG panel -->
+      <div class="rpg-panel">
+        <div class="rpg-stat">
+          <span class="rpg-label">XP</span>
+          <span id="xpText" class="rpg-value">0</span>
+        </div>
+        <div class="rpg-stat">
+          <span class="rpg-label">STREAK</span>
+          <span id="streakText" class="rpg-value">0🔥</span>
+        </div>
+        <div class="rpg-stat">
+          <span class="rpg-label">CLASS</span>
+          <span id="classLabel" class="rpg-value">—</span>
+        </div>
+        <button class="btn ultimate locked" id="ultimateBtn">⚡ ULTIMATE</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- RESULT SCREEN -->
+  <section class="screen" id="resultScreen">
+    <div class="card result-card">
+      <div class="result-badge" id="rankBadge"></div>
+      <h2 class="section-title">Mission Complete</h2>
+      <p id="finalScore" class="final-score"></p>
+      <p id="playerBestScore" class="best-score"></p>
+
+      <div class="xp-bar-wrap">
+        <span class="xp-label">XP Progress</span>
+        <div class="xp-bar">
+          <div class="xp-fill" id="xpFill"></div>
+        </div>
+        <span id="xpTotal" class="xp-total"></span>
+      </div>
+
+      <p id="rankText" class="rank-text"></p>
+
+      <!-- NEW: Leaderboard snippet on result -->
+      <div class="result-leaderboard">
+        <h4>Top Scores</h4>
+        <div id="resultLeaderboard"></div>
+      </div>
+
+      <div class="result-buttons">
+        <button class="btn primary glow-btn" id="restartBtn">🔄 Play Again</button>
+        <button class="btn secondary" id="viewLeaderboardBtn">🏆 Full Leaderboard</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- MASCOT -->
+  <div class="mascot" id="mascot">
+    <div class="speech" id="mascotSpeech">Welcome Operative!</div>
+    <div class="mascot-icon">🤖</div>
+  </div>
+
+ <script src="questions.js"></script>
+<script src="script.js"></script>
+</body>
+</html>
